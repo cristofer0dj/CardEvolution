@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #1e1e2f;
+      color: white;
+    }
+    .header {
+      background: #2e2e40;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+    .profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .stats span {
+      margin: 0 10px;
+    }
+    .tabs {
+      background: #333;
+      display: flex;
+      padding: 0.5rem;
+      overflow-x: auto;
+    }
+    .tabs div {
+      padding: 0.5rem 1rem;
+      margin-right: 1rem;
+      background: #444;
+      border-radius: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tabs .active {
+      background: #666;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .card {
+      background: #222;
+      border: 3px solid teal;
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card img {
+      width: 100%;
+    }
+    .card .label {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: red;
+      color: white;
+      padding: 2px 5px;
+      font-size: 12px;
+    }
+    .card .count {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(0,0,0,0.6);
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      display: none;
+      flex-direction: column;
+    }
+    .modal img {
+      width: 90%;
+      max-width: 400px;
+      border: 5px solid #4ac1f7;
+      border-radius: 10px;
+    }
+    .modal .close {
+      margin-top: 1rem;
+      background: #4ac1f7;
+      color: black;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .card.hierro { border-color: gray; }
+.card.bronce { border-color: #cd7f32; }
+.card.plata { border-color: silver; }
+.card.oro { border-color: gold; }
+.card.platino { border-color: #e5e4e2; }
+.card.diamante { border-color: #00e5ff; }
+.card.ascendant { border-color: #6f00ff; }
+.card.inmortal { border-color: #ff4d4d; }
+.card.radiant { border-color: #ffcc00; }
+.card.devil { border-color: #8b0000; }
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="profile">
+      <img src="fotos/ayano.jpg" alt="avatar" />
+      <div>
+        <strong>Rsales</strong><br />
+        <div class="stats">
+          <span>🪙 100.9K</span>
+          <span>💎 0</span>
+          <span>♻️ 137.20</span>
+        </div>
+      </div>
+    </div>
+    <div>⭐⭐⭐⭐⭐</div>
+  </div>
+  <div class="tabs" id="categories"></div>
+  <div class="grid" id="cardGrid"></div>
+  
+
+  <div class="modal" id="modal">
+    <img id="modal-img" src="" alt="Card zoom" />
+    <button class="close" onclick="closeModal()">Cerrar</button>
+  </div>
+
+  <script>
+    const categories = ["Hierro", "Bronce", "Plata", "Oro", "Platino", "Diamante", "Ascendant", "Inmortal", "Radiant", "Devil"];
+    const cards = [
+      { src: "F/1.1.png", count: 1, label: "SHARCK", category: "Hierro" },
+      { src: "F/1.2.png", count: 2, label: "SHARCK", category: "Hierro" },
+      { src: "F/1.3.1.png", count: 3, label: "SHARCK", category: "Hierro" },
+      { src: "F/1.3.png", count: 4, label: "SHARCK", category: "Hierro" },
+      { src: "F/1.4.png", count: 5, label: "SHARCK", category: "Hierro" },
+      { src: "F/GOLD.png", count: 6, label: "FRENESI", category: "Hierro" },
+
+      { src: "F/2.1.png", count: 1, label: "SHARCK", category: "Bronce" },
+      { src: "F/2.1.1.png", count: 1, label: "SHARCK", category: "Bronce" },
+      { src: "F/2.2.png", count: 2, label: "SHARCK", category: "Bronce" },
+      { src: "F/2.3.png", count: 3, label: "SHARCK", category: "Bronce" },
+      { src: "F/2.4.png", count: 4, label: "SHARCK", category: "Bronce" },
+      { src: "F/2.5.png", count: 5, label: "SHARCK", category: "Bronce" },
+      { src: "F/GOLD.png", count: 6, label: "FRENESI", category: "Bronce" },
+
+      { src: "F/3.1.png", count: 1, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.2.png", count: 2, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.3.1.png", count: 3, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.3.png", count: 4, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.4.png", count: 5, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.5.png", count: 6, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.6.png", count: 7, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.7.png", count: 8, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.8.png", count: 9, label: "ESPECIAL", category: "Plata" },
+      { src: "F/3.9.png", count: 10, label: "ESPECIAL", category: "Plata" },
+      { src: "F/GOLD.png", count: 11, label: "FRENESI", category: "Plata" },
+
+      { src: "F/4.1.png", count: 1, label: "SHARCK", category: "Oro" },
+      { src: "F/4.2.png", count: 2, label: "SHARCK", category: "Oro" },
+      { src: "F/4.3.png", count: 3, label: "SHARCK", category: "Oro" },
+      { src: "F/4.4.png", count: 4, label: "SHARCK", category: "Oro" },
+      { src: "F/4.5.png", count: 5, label: "SHARCK", category: "Oro" },
+      { src: "F/4.6.png", count: 6, label: "SHARCK", category: "Oro" },
+      { src: "F/GOLD.png", count: 6, label: "FRENESI", category: "Oro" },
+
+      { src: "F/5.1.png", count: 1, label: "SHARCK", category: "Platino" },
+      { src: "F/5.2.png", count: 2, label: "SHARCK", category: "Platino" },
+      { src: "F/5.3.png", count: 3, label: "SHARCK", category: "Platino" },
+      { src: "F/GOLD.png", count: 4, label: "FRENESI", category: "Platino" },
+
+      { src: "F/6.1.png", count: 1, label: "SHARCK", category: "Diamante" },
+      { src: "F/6.2.png", count: 2, label: "SHARCK", category: "Diamante" },
+      { src: "F/6.3.png", count: 3, label: "SHARCK", category: "Diamante" },
+      { src: "F/GOLD.png", count: 4, label: "FRENESI", category: "Diamante" },
+
+      { src: "F/7.1.png", count: 1, label: "EVOLITION", category: "Ascendant" },
+      { src: "F/7.2.png", count: 2, label: "EVOLITION", category: "Ascendant" },
+      { src: "F/7.3.png", count: 3, label: "EVOLITION", category: "Ascendant" },
+      { src: "F/7.4.png", count: 4, label: "EVOLITION", category: "Ascendant" },
+      { src: "F/7.5.png", count: 5, label: "EVOLITION", category: "Ascendant" },
+      { src: "F/7.6.png", count: 6, label: "EVOLITION", category: "Ascendant" },
+      { src: "F/7.7.png", count: 7, label: "EVOLITION", category: "Ascendant" },
+      { src: "F/7.8.png", count: 8, label: "EVOLITION", category: "Ascendant" },
+      { src: "F/GOLD.png", count: 8, label: "FRENESI", category: "Ascendant" },
+
+      { src: "F/8.1.png", count: 1, label: "SHARCK", category: "Inmortal" },
+      { src: "F/8.2.png", count: 2, label: "SHARCK", category: "Inmortal" },
+      { src: "F/8.3.png", count: 3, label: "SHARCK", category: "Inmortal" },
+      { src: "F/GOLD.png", count: 3, label: "FRENESI", category: "Inmortal" },
+
+      { src: "F/9.1.png", count: 1, label: "BOSS", category: "Radiant" },
+      { src: "F/9.2.png", count: 2, label: "BOSS", category: "Radiant" },
+      { src: "F/9.3.png", count: 3, label: "BOSS", category: "Radiant" },
+      { src: "F/9.4.png", count: 4, label: "BOSS", category: "Radiant" },
+      { src: "F/GOLD.png", count: 6, label: "FRENESI", category: "Radiant" },
+
+      { src: "F/10.1.png", count: 1, label: "PROXIMAMENTE DEMONIO", category: "Devil" },
+      { src: "F/GOLD.png", count: 2, label: "FRENESI", category: "Devil" }
+
+    ];
+
+    const categoriesDiv = document.getElementById("categories");
+    const cardGrid = document.getElementById("cardGrid");
+
+    let activeCategory = "Bronce";
+
+    function renderCategories() {
+      categoriesDiv.innerHTML = "";
+      categories.forEach(cat => {
+        const div = document.createElement("div");
+        div.textContent = cat;
+        div.className = cat === activeCategory ? "active" : "";
+        div.onclick = () => {
+          activeCategory = cat;
+          renderCategories();
+          renderCards();
+        };
+        categoriesDiv.appendChild(div);
+      });
+    }
+
+    function renderCards() {
+      cardGrid.innerHTML = "";
+      cards.filter(c => c.category === activeCategory).forEach(card => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.onclick = () => openModal(card.src);
+        if (card.label) {
+          const label = document.createElement("span");
+          label.className = "label";
+          label.textContent = card.label;
+          div.appendChild(label);
+        }
+        const count = document.createElement("span");
+        count.className = "count";
+        count.textContent = card.count;
+        div.appendChild(count);
+
+        const img = document.createElement("img");
+        img.src = card.src;
+        div.appendChild(img);
+
+        cardGrid.appendChild(div);
+      });
+    }
+
+    function openModal(src) {
+      document.getElementById('modal-img').src = src;
+      document.getElementById('modal').style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    renderCategories();
+    renderCards();
+  </script>
+</body>
+</html>
